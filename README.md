@@ -108,11 +108,11 @@ I've provided a sample YouTube video that demonstrates how to use the colorblind
 
 You will need Unreal Engine 4.16.1 or greater (older versions of the engine may work, but if you can't open the assets included here then you will need to upgrade to a later version of the engine).
 
-Download the .zip file from the [Releases](https://github.com/botman99/ColorBlindSimulation/releases) page and save this to somewhere on your hard disk.  Open the .zip file and extract the contents (or just copy the "Contents" folder) into the folder for your game.  You want to copy it into the same folder where a Content folder should already exist (you want to "merge" these 2 Content folders).  For example...
+Download the .zip file from the [Releases](https://github.com/botman99/ColorBlindSimulation/releases) page and save this to somewhere on your hard disk.  Open the .zip file and extract the contents (or just copy the "Content" folder) into the folder for your game.  You want to copy it into the same folder where a Content folder should already exist (you want to "merge" these 2 Content folders).  For example...
 
 ![Explorer Folder](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/UnzipTheFiles.png)
 
-Copy the "Contents" folder in the game folder (with the red box shown above, **NOT** into the other "Contents" folder shown with the arrow).
+Copy the "Content" folder in the game folder (with the red box shown above, **NOT** into the other "Content" folder shown with the arrow).
 
 Start up the editor for your game and in the Content Browser (in the Content/Materials folder) you should see the following assets:
 
@@ -124,7 +124,7 @@ Double click on the "ColorBlind_Mat_Param_Collection" asset first to verify that
 
 [![screenshot](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/MatParam_Collection_small.png)](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/MatParam_Collection.png)
 
-As mentioned in the video, to turn on one of the 4 colorblind simulation modes, set once of the parameters (CB_Protanopia, CB_Deuteranopia, CB_Tritanopia, or CB_Monochromacy) to 1.0 and set the other 3 parameters to 0.0 to turn them off.  The colorblind simluation postprocess material will only let one simulation type be active at once, so if more than one are turned on at the same time, you will only see the effect of one of them.
+As mentioned in the video, to turn on one of the 4 colorblind simulation modes, set one of the parameters (CB_Protanopia, CB_Deuteranopia, CB_Tritanopia, or CB_Monochromacy) to 1.0 and set the other 3 parameters to 0.0 to turn them off.  The colorblind simluation postprocess material will only let one simulation type be active at a time, so if more than one are turned on at the same time, you will only see the effect of one of them.
 
 Now we need to add the colorblind postprocess material to the CameraCompoent (or the World Camera) for your game.  To do this, open the Character for your game in Blueprint (for my game, this asset was called "FirstPersonCharacter").
 
@@ -148,13 +148,19 @@ Here's what the FirstPersonCharacter Event Graph looks like (again, click on the
 
 [![screenshot](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/FirstPersonCharacter_Blueprint_small.png)](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/FirstPersonCharacter_Blueprint.png)
 
-There are 4 rows for each mode (Protanopia, Deuteranopia, Tritanopia, and Monochromacy) and one additional row that turns everything off.  Each row starts with an Event for the keypress and then uses "Set Scalar Parameter Value" to set the material collection parameter values to 1.0 or 0.0 and at the end of the row uses "Print String" to print out a message to the display to indicate what mode was selected.
+There are 4 rows for each mode (Protanopia, Deuteranopia, Tritanopia, and Monochromacy) and one additional row that turns everything off.  Each row starts with an Event for the keypress and then uses "Set Scalar Parameter Value" to set the material collection parameter values to 1.0 or 0.0 to control which colorblind simulation mode is enabled (and to disable the others).  The end of the row uses "Print String" to print out a message to the display to indicate what mode was selected.
 
 Here's 2 more shots of this zoomed in more to show better detail:
 
 [![screenshot](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/FirstPersonCharacter_Blueprint_1_small.png)](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/FirstPersonCharacter_Blueprint_1.png)
 
 [![screenshot](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/FirstPersonCharacter_Blueprint_2_small.png)](https://raw.githubusercontent.com/botman99/ColorBlindSimulation/master/img/FirstPersonCharacter_Blueprint_2.png)
+
+Once this is all added to your Character's Event Graph, click the "Compile" button to rebuild your Character Blueprint and click the "Save" button to save everything.
+
+Now you can start your game and press '6', '7', '8', or '9' to enable one of the colorblind simulation modes and press '0' to turn the colorblind simulation back off.
+
+**NOTE:** Make sure you remember to remove the colorblind simulation postprocess material from your Camera or CameraComponent before you ship your game!  Also, remove the Blueprint nodes for the '6', 7', '8', 9', and '0' keys before you ship your game.  :)
 
 ## Add C++ Code To Control ColorBlind Simulation
 
@@ -170,9 +176,8 @@ public:
 
 The only thing after that should be the closing brace and the semicolon:
 
-````
+```
 };
-
 ```
 
 Then open the .cpp file for your Character class (for my example it was "ColorBlindCharacter.cpp") and add the following at the bottom of that file.
