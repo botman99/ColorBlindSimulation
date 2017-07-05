@@ -180,7 +180,14 @@ The only thing after that should be the closing brace and the semicolon:
 };
 ```
 
-Then open the .cpp file for your Character class (for my example it was "ColorBlindCharacter.cpp") and add the following at the bottom of that file.
+Then open the .cpp file for your Character class (for my example it was "ColorBlindCharacter.cpp") and add the following at the top of the file (right after all of the other #include lines):
+
+```
+#include "Engine/Engine.h"
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
+```
+Then add the following at the very bottom of the file.
 
 ```
 void AYourClassHere::ColorBlind(FString command, float value)
